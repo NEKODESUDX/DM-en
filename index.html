@@ -1,16 +1,17 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>AARR DM</title>
-    <meta name="description" content="Group DM tool">
+    <meta name="description" content="グループDMツールです">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#FF0000">
     <meta property="og:url" content="">
     <meta property="og:type" content="article">
     <meta property="og:title" content="AARR DM">
-    <meta property="og:description" content="DM tool">
-    <meta property="og:site_name" content="Troll Army">
+    <meta property="og:description" content="DMツールです">
+    <meta property="og:site_name" content="荒らし連合軍">
     <meta property="og:image" content="https://i.imgur.com/JTkB9AC.png">
 
     <link rel="stylesheet" href="style.css">
@@ -33,51 +34,51 @@
 </head>
 <body>
     <h1>Mass Group Manager</h1>
-    <p>Note: Due to Discord's specifications, there is a rate limit for group creation and member addition (night time is recommended for addition).</p>
-    <p>You cannot create and add members to groups simultaneously. Please complete group creation before adding members.</p>
-    <p>The entered content is not saved. Please copy it before closing or reloading the page.</p>
-    <p>Only up to 10 people can be added to a single group. Do not enter group IDs that have used up their 10 slots.</p>
-    <p>Do not press the buttons repeatedly or press other buttons during the process.</p>
-    <p>Please keep this tab open. If the browser is closed during the process, the group addition will restart, sending duplicate requests and causing bugs.</p>
-    <p>If you accidentally close the browser, manually remove the already added groups from the ID input field.</p>
-    <a href="https://github.com/NEKODESUDX/DMID-cleaner" target="_blank">Tool for removing unused group IDs and getting all IDs</a>
-    <a href="https://discord.gg/DPmPdpcNqs" target="_blank">Developer support server (Discord)</a>
-    <a href="https://youtu.be/NTrzk7bxotg?si=Nd482zjloHVn6V4R" target="_blank">Token retrieval method (YouTube)</a>
+    <p>注意: discordの仕様上グループ作成とメンバー追加は数分間のレートリミットがあります(追加は夜間推奨)</p>
+    <p>グループを作りながら追加は出来ません 十分に作り終わってからメンバーを追加してください</p>
+    <p>入力した内容は保存されません ページを閉じるかリロードする前にコピーボタンを押してメモしてください</p>
+    <p>一つのグループに10人までしか追加出来ません 10人分使用したグループIDは入力しないでください</p>
+    <p>動作の実行中にボタンの連打や他のボタンを押さないでください</p>
+    <p>このタブは必ず開いて置いてください 途中でブラウザが閉じてしまうとグループ追加が最初からやり直しになり、同じグループに追加リクエストを送ってしまうのでバグが発生します</p>
+    <p>ブラウザを閉じてしまった場合は既に追加されているグループをID入力欄から手動で削除してください</p>  
+    <a href="https://github.com/NEKODESUDX/DMID-cleaner" target="_blank">参加していないグループIDの削除と全ID取得ツール</a>
+    <a href="https://discord.gg/DPmPdpcNqs" target="_blank">開発者サポートサーバー(discord)</a>
+    <a href="https://youtu.be/NTrzk7bxotg?si=Nd482zjloHVn6V4R" target="_blank">token取得方法(youtube)</a>
     <form id="groupForm">
-        <label for="token">Token:</label>
+        <label for="token">トークン:</label>
         <input type="text" id="token" name="token" required>
-        <button type="button" onclick="copyToClipboard('token')">Copy</button>
+        <button type="button" onclick="copyToClipboard('token')">コピー</button>
 
-        <label for="groupId">Group ID (result obtained or manually entered):</label>
+        <label for="groupId">グループID (取得結果または自分で入力):</label>
         <textarea id="groupId" name="groupId" rows="10"></textarea>
-        <button type="button" onclick="copyToClipboard('groupId')">Copy</button>
+        <button type="button" onclick="copyToClipboard('groupId')">コピー</button>
 
-        <label for="userIds">User IDs (enter separated by new lines):</label>
+        <label for="userIds">ユーザーID (改行区切りで入力):</label>
         <textarea id="userIds" name="userIds" rows="10"></textarea>
-        <button type="button" onclick="copyToClipboard('userIds')">Copy</button>
+        <button type="button" onclick="copyToClipboard('userIds')">コピー</button>
 
-        <label for="message">Message to send:</label>
+        <label for="message">送信メッセージ:</label>
         <input type="text" id="message" name="message">
         
-        <label for="delay">Message sending delay (seconds):</label>
+        <label for="delay">メッセージ送信の遅延 (秒):</label>
         <input type="number" id="delay" name="delay" value="1" min="0.1" step="0.1">
 
-        <label for="baseNames">Group names (changeable) - multiple names can be specified separated by commas:</label>
+        <label for="baseNames">グループ名 (変更) カンマ区切りで入力で複数指定可能:</label>
         <input type="text" id="baseNames" name="baseNames">
 
-        <label for="iconUrl">Icon image URL:</label>
+        <label for="iconUrl">アイコン画像URL:</label>
         <input type="text" id="iconUrl" name="iconUrl">
 
-        <button type="button" onclick="createGroups()">Create Groups (rate limit 10 times/10 minutes)</button>
-        <button type="button" onclick="sendMessage()">Send Message</button>
-        <button type="button" onclick="addUsers()">Add Users (rate limit 10 times/120 seconds)</button>
-        <label for="startDelay">Time until user addition starts (minutes):</label>
+        <button type="button" onclick="createGroups()">グループ作成 (レートリミット10回/10分)</button>
+        <button type="button" onclick="sendMessage()">メッセージ送信</button>
+        <button type="button" onclick="addUsers()">ユーザー追加 (レートリミット10回/120秒)</button>
+        <label for="startDelay">ユーザー追加開始までの時間 (分後):</label>
         <input type="number" id="startDelay" name="startDelay" value="0" min="0">
-        <button type="button" onclick="changeGroupNames()">Change Group Names</button>
-        <button type="button" onclick="changeGroupIcons()">Change Group Icons</button>
+        <button type="button" onclick="changeGroupNames()">グループ名変更</button>
+        <button type="button" onclick="changeGroupIcons()">グループアイコン変更</button>
     </form>
 
-    <p id="status">Status: Ready</p>
+    <p id="status">ステータス: 準備完了</p>
 
     <ul id="errorLog"></ul>
 
@@ -94,8 +95,8 @@
             logError(`[Error] ${message} at ${source}:${lineno}:${colno}`);
         };
     </script>
-    <p>❤ If you like this tool, please donate to the developers</p>
-    <p>BTC: 37fB226Pyoc4so7H6KVMjxWzRKeporBDfW</p>
-    <p>LTC: MSU7xJHQJzocME3xLQmtAKfow36nwhuZ9Y</p>
+ ❤寄付 If you like this tool, please donate to the developers
+    BTC: 37fB226Pyoc4so7H6KVMjxWzRKeporBDfW
+    LTC: MSU7xJHQJzocME3xLQmtAKfow36nwhuZ9Y
 </body>
 </html>
