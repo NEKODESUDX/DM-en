@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AARR DM</title>
+    <meta name="description" content="Group DM tool">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF0000">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AARR DM">
+    <meta property="og:description" content="DM tool">
+    <meta property="og:site_name" content="Troll Army">
+    <meta property="og:image" content="https://i.imgur.com/JTkB9AC.png">
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body, h1, p, label, a, button {
+            color: white;
+        }
+        #status {
+            width: 100%;
+            height: 150px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #333;
+            color: white;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mass Group Manager</h1>
+    <p>Note: Due to Discord's specifications, there is a rate limit for group creation and member addition (night time is recommended for addition).</p>
+    <p>You cannot create and add members to groups simultaneously. Please complete group creation before adding members.</p>
+    <p>The entered content is not saved. Please copy it before closing or reloading the page.</p>
+    <p>Only up to 10 people can be added to a single group. Do not enter group IDs that have used up their 10 slots.</p>
+    <p>Do not press the buttons repeatedly or press other buttons during the process.</p>
+    <p>Please keep this tab open. If the browser is closed during the process, the group addition will restart, sending duplicate requests and causing bugs.</p>
+    <p>If you accidentally close the browser, manually remove the already added groups from the ID input field.</p>
+    <a href="https://github.com/NEKODESUDX/DMID-cleaner" target="_blank">Tool for removing unused group IDs and getting all IDs</a>
+    <a href="https://discord.gg/DPmPdpcNqs" target="_blank">Developer support server (Discord)</a>
+    <a href="https://youtu.be/NTrzk7bxotg?si=Nd482zjloHVn6V4R" target="_blank">Token retrieval method (YouTube)</a>
+    <form id="groupForm">
+        <label for="token">Token:</label>
+        <input type="text" id="token" name="token" required>
+        <button type="button" onclick="copyToClipboard('token')">Copy</button>
+
+        <label for="groupId">Group ID (result obtained or manually entered):</label>
+        <textarea id="groupId" name="groupId" rows="10"></textarea>
+        <button type="button" onclick="copyToClipboard('groupId')">Copy</button>
+
+        <label for="userIds">User IDs (enter separated by new lines):</label>
+        <textarea id="userIds" name="userIds" rows="10"></textarea>
+        <button type="button" onclick="copyToClipboard('userIds')">Copy</button>
+
+        <label for="message">Message to send:</label>
+        <input type="text" id="message" name="message">
+        
+        <label for="delay">Message sending delay (seconds):</label>
+        <input type="number" id="delay" name="delay" value="1" min="0.1" step="0.1">
+
+        <label for="baseNames">Group names (changeable) - multiple names can be specified separated by commas:</label>
+        <input type="text" id="baseNames" name="baseNames">
+
+        <label for="iconUrl">Icon image URL:</label>
+        <input type="text" id="iconUrl" name="iconUrl">
+
+        <button type="button" onclick="createGroups()">Create Groups (rate limit 10 times/10 minutes)</button>
+        <button type="button" onclick="sendMessage()">Send Message</button>
+        <button type="button" onclick="addUsers()">Add Users (rate limit 10 times/120 seconds)</button>
+        <label for="startDelay">Time until user addition starts (minutes):</label>
+        <input type="number" id="startDelay" name="startDelay" value="0" min="0">
+        <button type="button" onclick="changeGroupNames()">Change Group Names</button>
+        <button type="button" onclick="changeGroupIcons()">Change Group Icons</button>
+    </form>
+
+    <p id="status">Status: Ready</p>
+
+    <ul id="errorLog"></ul>
+
+    <script src="script.js"></script>
+    <script>
+        function logError(message) {
+            const errorLog = document.getElementById('errorLog');
+            const listItem = document.createElement('li');
+            listItem.textContent = message;
+            errorLog.appendChild(listItem);
+        }
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            logError(`[Error] ${message} at ${source}:${lineno}:${colno}`);
+        };
+    </script>
+    <p>❤ If you like this tool, please donate to the developers</p>
+    <p>BTC: 37fB226Pyoc4so7H6KVMjxWzRKeporBDfW</p>
+    <p>LTC: MSU7xJHQJzocME3xLQmtAKfow36nwhuZ9Y</p>
+</body>
+</html>
