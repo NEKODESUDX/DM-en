@@ -1,5 +1,5 @@
 tool
-https://nekodesudx.github.io/DM/
+https://nekodesudx.github.io/DM-en/
 
 
 Prototype version
