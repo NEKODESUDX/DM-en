@@ -1,3 +1,4 @@
+tool
 https://nekodesudx.github.io/DM/
 
 
