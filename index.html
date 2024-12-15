@@ -47,12 +47,17 @@
     <form id="groupForm">
         <label for="token">token:</label>
         <input type="text" id="token" name="token" required>
-        <button type="button" onclick="copyToClipboard('token')">コピー</button>
+        <button type="button" onclick="copyToClipboard('token')">copy</button>
 
-        <label for="groupId">groupID:</label>
+        <label for="groupId">groupID(main):</label>
         <textarea id="groupId" name="groupId" rows="10"></textarea>
-        <button type="button" onclick="copyToClipboard('groupId')">コピー</button>
+        <button type="button" onclick="copyToClipboard('groupId')">copy</button>
 
+        <label for="modifyGroupId">groupID(add user):</label>
+        <textarea id="modifyGroupId" name="modifyGroupId" rows="10" class="textOutput"></textarea>
+        <button type="button" onclick="copyToClipboard('modifyGroupId')">copy</button>
+        <p>⚠️Group IDs that have completed user addition will be automatically removed from the input field.</p>
+        
         <label for="userIds">userID:</label>
         <textarea id="userIds" name="userIds" rows="10"></textarea>
         <button type="button" onclick="copyToClipboard('userIds')">コピー</button>
@@ -76,6 +81,15 @@
         <input type="number" id="startDelay" name="startDelay" value="0" min="0">
         <button type="button" onclick="changeGroupNames()">change group name</button>
         <button type="button" onclick="changeGroupIcons()">change group icon</button>
+                   
+<div class="dividing">
+    <p class="sectionTitle">friend invite URL</p>
+    <button type="button" class="sectionButton" id="createFriendInvite">create invite</button>
+</div>
+<div class="dividing">
+    <input type="text" id="friendInviteUrl" class="textOutput" readonly>
+    <button type="button" class="sectionButton" onclick="copyToClipboard('friendInviteUrl')">copy</button>
+</div>
     </form>
 
     <p id="status">log</p>
