@@ -102,58 +102,63 @@ body, h1, p, label, a, button {
     </style>
 </head>
 <body>
-<h1>Mass Group Manager</h1
-    <form id="groupForm">
-        <label for="token">token:</label>
-        <input type="text" id="token" name="token" required>
-        <button type="button" onclick="copyToClipboard('token')">copy</button>
+<h1>Mass Group Manager</h1>
+<label for="token">Token:</label>
+<input type="text" id="token" name="token" required>
+<button type="button" onclick="copyToClipboard('token')">Copy</button>
 
-        <label for="groupId">groupID(Create/message/Change icon/ name):</label>
-        <textarea id="groupId" name="groupId" rows="10"></textarea>
-        <button type="button" onclick="copyToClipboard('groupId')">copy</button>
+<label for="groupId">Group ID (Create/Send Message/Change Icon/Change Name):</label>
+<textarea id="groupId" name="groupId" rows="10"></textarea>
+<button type="button" onclick="copyToClipboard('groupId')">Copy</button>
 
-        <label for="modifyGroupId">groupID(add user):</label>
-        <textarea id="modifyGroupId" name="modifyGroupId" rows="10" class="textOutput"></textarea>
-        <button type="button" onclick="copyToClipboard('modifyGroupId')">copy</button>
-        <p>⚠️Group IDs that have completed user addition will be automatically removed from the input field.</p>
-        
-        <label for="userIds">userID:</label>
-        <textarea id="userIds" name="userIds" rows="10"></textarea>
-        <button type="button" onclick="copyToClipboard('userIds')">copy</button>
+<button type="button" onclick="createGroups()">Create Groups (Rate Limit: 10 times/10 min)</button>
 
-        <label for="message">message:</label>
-        <input type="text" id="message" name="message">
-        
-        <label for="delay">message delay:</label>
-        <input type="number" id="delay" name="delay" value="1" min="0.1" step="0.1">
+<label for="modifyGroupId">Group ID (Add Users):</label>
+<textarea id="modifyGroupId" name="modifyGroupId" rows="10" class="textOutput"></textarea>
+<button type="button" onclick="copyToClipboard('modifyGroupId')">Copy</button>
+<p>⚠️ Groups where user addition is completed will be automatically removed from the input field</p>
 
-        <label for="baseNames">group name can use , </label>
-        <input type="text" id="baseNames" name="baseNames">
+<label for="userIds">User IDs (Enter line by line):</label>
+<textarea id="userIds" name="userIds" rows="10"></textarea>
 
-        <label for="iconUrl">icon image:</label>
-        <input type="text" id="iconUrl" name="iconUrl">
+<label for="startDelay">Start time for adding users (minutes later):</label>
+<input type="number" id="startDelay" name="startDelay" value="0" min="0">
 
-        <button type="button" onclick="createGroups()">group create(10/10m)</button>
-        <button type="button" onclick="sendMessage()">message</button>
-        <button type="button" onclick="addUsers()">add user(10/120m)</button>
-        <label for="startDelay">add user start timer (m):</label>
-        <input type="number" id="startDelay" name="startDelay" value="0" min="0">
-        <button type="button" onclick="changeGroupNames()">change group name</button>
-        <button type="button" onclick="changeGroupIcons()">change group icon</button>
-                   
+<button type="button" onclick="copyToClipboard('userIds')">Copy</button>
+<button type="button" onclick="addUsers()">Add Users (Rate Limit: 10 times/120 seconds)</button>
+
+<label for="message">Message to Send:</label>
+<input type="text" id="message" name="message">
+
+<label for="delay">Delay for sending messages (seconds):</label>
+<input type="number" id="delay" name="delay" value="1" min="0.1" step="0.1">
+
+<button type="button" onclick="sendMessage()">Send Message</button>
+
+<label for="baseNames">Group Names (Change) - Specify multiple with commas:</label>
+<input type="text" id="baseNames" name="baseNames">
+
+<button type="button" onclick="changeGroupNames()">Change Group Names</button>
+
+<label for="iconUrl">Icon Image URL:</label>
+<input type="text" id="iconUrl" name="iconUrl">
+
+<button type="button" onclick="changeGroupIcons()">Change Group Icons</button>
+
 <div class="dividing">
-    <p class="sectionTitle">friend invite URL</p>
-    <button type="button" class="sectionButton" id="createFriendInvite">create invite</button>
+<p class="sectionTitle">Friend Invite URL</p>
+<button type="button" class="sectionButton" id="createFriendInvite">Create Link</button>
 </div>
 <div class="dividing">
-    <input type="text" id="friendInviteUrl" class="textOutput" readonly>
-    <button type="button" class="sectionButton" onclick="copyToClipboard('friendInviteUrl')">copy</button>
+<input type="text" id="friendInviteUrl" class="textOutput" readonly>
+<button type="button" class="sectionButton" onclick="copyToClipboard('friendInviteUrl')">Copy</button>
 </div>
-    </form>
+</form>
 
-    <p id="status">log</p>
+<p id="status">Status: Ready</p>
 
-    <ul id="errorLog"></ul>
+<ul id="errorLog"></ul>
+
 
     <script src="script.js"></script>
     <script>
