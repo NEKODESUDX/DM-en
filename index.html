@@ -113,13 +113,14 @@ body, h1, p, label, a, button {
 
 <button type="button" onclick="createGroups()">Create Groups (Rate Limit: 10 times/10 min)</button>
 
+<label for="userIds">User IDs (Enter line by line):</label>
+<textarea id="userIds" name="userIds" rows="10"></textarea>
+
 <label for="modifyGroupId">Group ID (Add Users):</label>
 <textarea id="modifyGroupId" name="modifyGroupId" rows="10" class="textOutput"></textarea>
 <button type="button" onclick="copyToClipboard('modifyGroupId')">Copy</button>
 <p>⚠️ Groups where user addition is completed will be automatically removed from the input field</p>
 
-<label for="userIds">User IDs (Enter line by line):</label>
-<textarea id="userIds" name="userIds" rows="10"></textarea>
 
 <label for="startDelay">Start time for adding users (minutes later):</label>
 <input type="number" id="startDelay" name="startDelay" value="0" min="0">
