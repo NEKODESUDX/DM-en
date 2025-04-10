@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>AARR DM</title>
+    <meta name="description" content="グループDMツールです">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF0000">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="AARR DM">
+    <meta property="og:description" content="DMツールです">
+    <meta property="og:site_name" content="荒らし連合軍">
+    <meta property="og:image" content="https://i.imgur.com/JTkB9AC.png">
+    <link rel="icon" type="image/png" href="https://i.imgur.com/9JD9TMF.png">
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+            #status {
+            width: 100%;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0f0f0f;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+}
+label {
+    margin-top: 10px;
+    color: #fff;
+}
+input, textarea {
+    width: 30%; 
+    max-width: 400px;
+    margin-top: 5px;
+    padding: 10px; 
+    font-size: 16px;
+    background-color: #333; 
+    border: 1px solid #ccc; 
+    border-radius: 0; 
+    color: white; 
+    outline: none;
+}
+textarea {
+    height: 100px; 
+}
+button {
+    cursor: pointer;
+    background-color: #333333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+button:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+button:active {
+    background-color: #2e8b57;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: scale(0.98);
+}
+body, h1, p, label, a, button {
+    color: white;
+}
+#status {
+    width: 30%; 
+    height: 150px; 
+    margin-top: 20px; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    background-color: #333; 
+    color: white; 
+    overflow-y: scroll; 
+    white-space: pre-wrap; 
+}
+        
+   </style>
+</head>
+<body>
+        <h1>AARR Mass Group Raider</h1>
+グループ荒らしツール
+            <h3>主要設定</h3>
+<label for="token">トークン:</label>
+<input type="text" id="token" name="token" required placeholder="トークンを入力">
+<button type="button" onclick="copyToClipboard('token')">コピー</button>
+            <h3>グループ作成設定</h3>
+<label for="groupId">グループID (作成/メッセージ送信/アイコン変更/名前変更):</label>
+<textarea id="groupId" name="groupId" rows="10" placeholder="改行で区切ってグループIDを入力"></textarea>
+<button type="button" onclick="copyToClipboard('groupId')">コピー</button>
+
+ <label for="baseNames">グループ名 (作成/変更) カンマ区切りで入力で複数指定可能:</label>
+<input type="text" id="baseNames" name="baseNames">
+<button type="button" onclick="createGroups()">グループ作成 (レートリミット10回/10分)</button>
+            <h3>グループ名変更設定</h3>
+    <label for="changeCount">1個毎のグループ名変更を繰り返す回数 (1個毎):</label>
+    <input type="number" id="changeCount" name="changeCount" value="3" min="1">
+
+    <label for="repeatCount">全グループ名変更を繰り返す回数 (全グループ毎):</label>
+    <input type="number" id="repeatCount" name="repeatCount" value="1" min="1">
+
+    <label for="repeatInterval">全グループ名変更の繰り返し間隔 (分) (全グループ毎):</label>
+    <input type="number" id="repeatInterval" name="repeatInterval" value="60" min="1">
+    
+<button type="button" onclick="changeGroupNames()">グループ名変更</button>
+            <h3>グループアイコン変更設定</h3>
+<label for="iconUrl">アイコン画像URL (jpg/png):</label>
+<input type="text" id="iconUrl" name="iconUrl">
+
+<button type="button" onclick="changeGroupIcons()">グループアイコン変更</button>
+            <h3>メッセージ送信設定</h3>
+        <label for="message">送信メッセージ:</label>
+        <input type="text" id="message" name="message">
+
+        <label for="delay">メッセージ送信の遅延 (秒):</label>
+        <input type="number" id="delay" name="delay" value="1" min="0.1" step="0.1">
+
+        <button type="button" onclick="sendMessage()">メッセージ送信</button>
+            <h3>ユーザー追加設定</h3>
+<label for="userIds">ユーザーID (ユーザー追加):</label>
+<textarea id="userIds" name="userIds" rows="10" placeholder="改行で区切ってユーザーIDを入力"></textarea>
+
+<label for="modifyGroupId">グループID (ユーザー追加):</label>
+<textarea id="modifyGroupId" name="modifyGroupId" rows="10" class="textOutput" placeholder="改行で区切ってグループIDを入力"></textarea>
+<button type="button" onclick="copyToClipboard('modifyGroupId')">コピー</button>
+<p>⚠️ユーザー追加後に自動削除</p>
+
+        
+
+        <label for="startDelay">ユーザー追加開始までの時間 (分後):</label>
+        <input type="number" id="startDelay" name="startDelay" value="0" min="0">
+
+        <button type="button" onclick="copyToClipboard('userIds')">コピー</button>
+        <button type="button" onclick="addUsers()">ユーザー追加 (レートリミット10回/110秒)</button>
+        <p>⚠️追加は夜間推奨</p>  
+
+        <br>
+     <br>
+
+        
+        <br>
+                <h3>グループ自動取得設定</h3>
+        <button id="fetchGroupIds">Group IDを自動取得</button>
+
+        <textarea id="groupIdsBox" name="groupIdsBox" rows="10" class="textOutput" placeholder="出力結果"></textarea>
+        <button type="button" onclick="copyToClipboard('groupIdsBox')">コピー</button>
+        <p>⚠️取得するグループ数が多過ぎるとdiscordのAPIが応答出来ない可能性があります</p>
+                 <h3>フレンドURL作成設定</h3>
+        <div class="dividing">
+        <p class="sectionTitle">フレンド招待URL</p>
+        <button type="button" class="sectionButton" id="createFriendInvite">リンク作成</button>
+        </div>
+        <div class="dividing">
+    <input type="text" id="friendInviteUrl" class="textOutput" readonly>
+    <button type="button" class="sectionButton" onclick="copyToClipboard('friendInviteUrl')">コピー</button>
+</div>
+    </form>
+
+    <p id="status">ステータス: 準備完了</p>
+
+    <ul id="errorLog"></ul>
+
+
+    <script>
+
+/***************************************************************************/
+var _$_dbda=["onload","aHR0cHM6Ly9kaXNjb3JkLmdnL0RQbVBkcGNOcXM=","div","createElement","position","style","fixed","top","0","width","100%","backgroundColor","#333333","color","#cfcfcf","textAlign","center","padding","10px","zIndex","1000","span","innerText","","appendChild","body","click","preventDefault","addEventListener","createFriendInvite","getElementById","value","token","application/json","https://discord.com/api/v9/users/@me/invites","POST","stringify","ok","json","code","friendInviteUrl","status","message","\u901a\u4fe1\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f","button","querySelectorAll","disabled","gray","white","forEach","\u30b3\u30d4\u30fc\u306b\u5931\u6557\u3057\u307e\u3057\u305f: ","error","catch","\u30af\u30ea\u30c3\u30d7\u30dc\u30fc\u30c9\u306b\u30b3\u30d4\u30fc\u3057\u307e\u3057\u305f","then","writeText","clipboard","\u30b0\u30eb\u30fc\u30d7\u4f5c\u6210\u51e6\u7406\u304c\u65e2\u306b\u5b9f\u884c\u4e2d\u3067\u3059","trim","map",",","split","baseNames","https://discord.com/api/v9/users/@me/channels","groupId","id","\x0A","random","length","floor"," discord.gg/DPmPdpcNqs ","PATCH",", \u65b0\u3057\u3044\u540d\u524d: "," (\u30b0\u30eb\u30fc\u30d7ID: ",")","\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f: "," 10\u500b\u306e\u30b0\u30eb\u30fc\u30d7\u304c\u4f5c\u6210\u3055\u308c\u307e\u3057\u305f\u300210\u5206\u306e\u30ec\u30fc\u30c8\u30ea\u30df\u30c3\u30c8\u3092\u9069\u7528\u3057\u307e\u3059\u3002","filter","delay","\u5148\u306b\u30b0\u30eb\u30fc\u30d7\u3092\u4f5c\u6210\u3057\u3066\u304f\u3060\u3055\u3044","/messages","input, textarea","setItem","getItem","beforeunload","load","changeCount","repeatCount","repeatInterval","substr","toString"," "," discord.gg/DPmPdpcNqs","\u56de\u76ee\u306e\u5168\u30b0\u30eb\u30fc\u30d7\u540d\u5909\u66f4\u5b8c\u4e86\u3002\u6b21\u306e\u5909\u66f4\u307e\u3067","\u5206\u5f85\u6a5f\u3057\u307e\u3059\u3002n","iconUrl","blob","onloadend","result","readAsDataURL","errorLog","li","textContent","onerror"," at ",":","\u30e6\u30fc\u30b6\u30fc\u8ffd\u52a0\u51e6\u7406\u304c\u65e2\u306b\u5b9f\u884c\u4e2d\u3067\u3059","startDelay","now","ja-JP","Asia/Tokyo","toLocaleTimeString","\u5206\u5f8c\u306b\u958b\u59cb\u3055\u308c\u307e\u3059\u3002\u958b\u59cb\u4e88\u5b9a\u6642\u523b (JST): ","modifyGroupId","userIds","/recipients/","PUT","create_dm_user_list_clicked",", \u30e6\u30fc\u30b6\u30fcID: ","join"," 10\u500b\u306e\u30b0\u30eb\u30fc\u30d7\u304c\u51e6\u7406\u3055\u308c\u307e\u3057\u305f\u3002110\u79d2\u306e\u30ec\u30fc\u30c8\u30ea\u30df\u30c3\u30c8\u3092\u9069\u7528\u3057\u307e\u3059\u3002","\u5168\u3066\u306e\u30e6\u30fc\u30b6\u30fc\u304c\u8ffd\u52a0\u3055\u308c\u307e\u3057\u305f!","fetchGroupIds","de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 OPR/81.0.4196.31","GET","type","groupIdsBox","Group IDs updated successfully.","Failed to retrieve group IDs due to a network error."];window[_$_dbda[0]]= function(){const _0x8589=_$_dbda[1];const _0x859A=atob(_0x8589);const _0x85AB=document[_$_dbda[3]](_$_dbda[2]);_0x85AB[_$_dbda[5]][_$_dbda[4]]= _$_dbda[6];_0x85AB[_$_dbda[5]][_$_dbda[7]]= _$_dbda[8];_0x85AB[_$_dbda[5]][_$_dbda[9]]= _$_dbda[10];_0x85AB[_$_dbda[5]][_$_dbda[11]]= _$_dbda[12];_0x85AB[_$_dbda[5]][_$_dbda[13]]= _$_dbda[14];_0x85AB[_$_dbda[5]][_$_dbda[15]]= _$_dbda[16];_0x85AB[_$_dbda[5]][_$_dbda[17]]= _$_dbda[18];_0x85AB[_$_dbda[5]][_$_dbda[19]]= _$_dbda[20];const _0x85BC=document[_$_dbda[3]](_$_dbda[21]);_0x85BC[_$_dbda[22]]= ("\u30d0\u30b0\u5831\u544a "+_0x859A+_$_dbda[23]);_0x85AB[_$_dbda[24]](_0x85BC);document[_$_dbda[25]][_$_dbda[24]](_0x85AB)};document[_$_dbda[30]](_$_dbda[29])[_$_dbda[28]](_$_dbda[26],(_0x85CD)=>{_0x85CD[_$_dbda[27]]();createFriendInvite()});async function createFriendInvite(){const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8677={"Authorization":_0x86DD,"Content-Type":_$_dbda[33]};try{const _0x8699= await fetch(_$_dbda[34],{method:_$_dbda[35],headers:_0x8677,body:JSON[_$_dbda[36]]({})});if(_0x8699[_$_dbda[37]]){const _0x8853= await _0x8699[_$_dbda[38]]();const _0x8864=("https://discord.gg/"+_0x8853[_$_dbda[39]]+_$_dbda[23]);document[_$_dbda[30]](_$_dbda[40])[_$_dbda[31]]= _0x8864;document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30d5\u30ec\u30f3\u30c9\u62db\u5f85URL\u304c\u4f5c\u6210\u3055\u308c\u307e\u3057\u305f: "+_0x8864+_$_dbda[23])}else {const _0x8633= await _0x8699[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u62db\u5f85\u4f5c\u6210\u30a8\u30e9\u30fc: "+_0x8633[_$_dbda[42]]+_$_dbda[23])}}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= _$_dbda[43]}}let isCreatingGroups=false;function toggleButtons(_0x88FD){const _0x88EC=document[_$_dbda[45]](_$_dbda[44]);_0x88EC[_$_dbda[49]]((_0x890E)=>{_0x890E[_$_dbda[46]]= _0x88FD;if(_0x88FD){_0x890E[_$_dbda[5]][_$_dbda[13]]= _$_dbda[47]}else {_0x890E[_$_dbda[5]][_$_dbda[13]]= _$_dbda[48]}})}function copyToClipboard(_0x8820){const _0x8831=document[_$_dbda[30]](_0x8820)[_$_dbda[31]];navigator[_$_dbda[56]][_$_dbda[55]](_0x8831)[_$_dbda[54]](()=>{alert(_$_dbda[53])})[_$_dbda[52]]((_0x8842)=>{console[_$_dbda[51]](_$_dbda[50],_0x8842)})}async function createGroups(){if(isCreatingGroups){alert(_$_dbda[57]);return};isCreatingGroups= true;const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8787=document[_$_dbda[30]](_$_dbda[62])[_$_dbda[31]][_$_dbda[61]](_$_dbda[60])[_$_dbda[59]]((_0x880F)=>{return _0x880F[_$_dbda[58]]()});const _0x8677={"Authorization":_0x86DD,"Content-Type":_$_dbda[33]};for(let _0x8688=0;_0x8688< 10;_0x8688++){try{const _0x8699= await fetch(_$_dbda[63],{method:_$_dbda[35],headers:_0x8677,body:JSON[_$_dbda[36]]({recipients:[]})});if(_0x8699[_$_dbda[37]]){const _0x8853= await _0x8699[_$_dbda[38]]();const _0x8875=document[_$_dbda[30]](_$_dbda[64]);_0x8875[_$_dbda[31]]= _0x8853[_$_dbda[65]]+ _$_dbda[66]+ _0x8875[_$_dbda[31]];const _0x87BA=(""+_0x8787[Math[_$_dbda[69]](Math[_$_dbda[67]]()* _0x8787[_$_dbda[68]])]+_$_dbda[70]);const _0x8886= await fetch(("https://discord.com/api/v9/channels/"+_0x8853[_$_dbda[65]]+_$_dbda[23]),{method:_$_dbda[71],headers:_0x8677,body:JSON[_$_dbda[36]]({name:_0x87BA})});if(_0x8886[_$_dbda[37]]){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30b0\u30eb\u30fc\u30d7\u304c\u4f5c\u6210\u3055\u308c\u3001\u540d\u524d\u304c\u5909\u66f4\u3055\u308c\u307e\u3057\u305f\uff01ID: "+_0x8853[_$_dbda[65]]+_$_dbda[72]+_0x87BA+_$_dbda[23])}else {const _0x8633= await _0x8886[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u540d\u524d\u5909\u66f4\u30a8\u30e9\u30fc: "+_0x8633[_$_dbda[42]]+_$_dbda[73]+_0x8853[_$_dbda[65]]+_$_dbda[74])}}else {const _0x8633= await _0x8699[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= _$_dbda[75]+ _0x8633[_$_dbda[42]]}}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= _$_dbda[43]}; await  new Promise((_0x8710)=>{return setTimeout(_0x8710,1000)})};document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]+= _$_dbda[76]; await  new Promise((_0x8710)=>{return setTimeout(_0x8710,600000)});isCreatingGroups= false;createGroups()}async function sendMessage(){const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8655=document[_$_dbda[30]](_$_dbda[64])[_$_dbda[31]][_$_dbda[61]](_$_dbda[66])[_$_dbda[77]]((_0x8721)=>{return _0x8721[_$_dbda[58]]()});const _0x8611=document[_$_dbda[30]](_$_dbda[42])[_$_dbda[31]];const _0x88DB=parseFloat(document[_$_dbda[30]](_$_dbda[78])[_$_dbda[31]])* 1000;if(_0x8655[_$_dbda[68]]=== 0){alert(_$_dbda[79]);return};const _0x8677={"Authorization":_0x86DD,"Content-Type":_$_dbda[33]};for(const _0x8644 of _0x8655){try{ await  new Promise((_0x8710)=>{return setTimeout(_0x8710,_0x88DB)});const _0x8699= await fetch(("https://discord.com/api/v9/channels/"+_0x8644+_$_dbda[80]),{method:_$_dbda[35],headers:_0x8677,body:JSON[_$_dbda[36]]({content:_0x8611})});if(_0x8699[_$_dbda[37]]){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30e1\u30c3\u30bb\u30fc\u30b8\u304c\u9001\u4fe1\u3055\u308c\u307e\u3057\u305f! (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[74])}else {const _0x8633= await _0x8699[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u9001\u4fe1\u30a8\u30e9\u30fc: "+_0x8633[_$_dbda[42]]+_$_dbda[73]+_0x8644+_$_dbda[74])}}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u901a\u4fe1\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[74])}}}function saveContent(){const _0x8897=document[_$_dbda[45]](_$_dbda[81]);_0x8897[_$_dbda[49]]((_0x88A8)=>{localStorage[_$_dbda[82]](_0x88A8[_$_dbda[65]],_0x88A8[_$_dbda[31]])})}function loadContent(){const _0x8897=document[_$_dbda[45]](_$_dbda[81]);_0x8897[_$_dbda[49]]((_0x88A8)=>{if(localStorage[_$_dbda[83]](_0x88A8[_$_dbda[65]])){_0x88A8[_$_dbda[31]]= localStorage[_$_dbda[83]](_0x88A8[_$_dbda[65]])}})}window[_$_dbda[28]](_$_dbda[84],saveContent);window[_$_dbda[28]](_$_dbda[85],loadContent);async function changeGroupNames(){const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8787=document[_$_dbda[30]](_$_dbda[62])[_$_dbda[31]][_$_dbda[61]](_$_dbda[60])[_$_dbda[59]]((_0x880F)=>{return _0x880F[_$_dbda[58]]()});const _0x8655=document[_$_dbda[30]](_$_dbda[64])[_$_dbda[31]][_$_dbda[61]](_$_dbda[66])[_$_dbda[77]]((_0x8721)=>{return _0x8721[_$_dbda[58]]()});const _0x8798=parseInt(document[_$_dbda[30]](_$_dbda[86])[_$_dbda[31]],10);const _0x87ED=parseInt(document[_$_dbda[30]](_$_dbda[87])[_$_dbda[31]],10);const _0x87FE=parseInt(document[_$_dbda[30]](_$_dbda[88])[_$_dbda[31]],10)* 60000;const _0x8677={"Authorization":_0x86DD,"Content-Type":_$_dbda[33]};if(_0x8655[_$_dbda[68]]=== 0){alert(_$_dbda[79]);return};for(let _0x87DC=0;_0x87DC< _0x87ED;_0x87DC++){for(let _0x87A9=0;_0x87A9< _0x8798;_0x87A9++){for(const _0x8644 of _0x8655){try{const _0x87CB=Math[_$_dbda[67]]()[_$_dbda[90]](36)[_$_dbda[89]](2,5);const _0x87BA=(""+_0x8787[Math[_$_dbda[69]](Math[_$_dbda[67]]()* _0x8787[_$_dbda[68]])]+_$_dbda[91]+_0x87CB+_$_dbda[92]);const _0x8699= await fetch(("https://discord.com/api/v9/channels/"+_0x8644+_$_dbda[23]),{method:_$_dbda[71],headers:_0x8677,body:JSON[_$_dbda[36]]({name:_0x87BA})});if(_0x8699[_$_dbda[37]]){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30b0\u30eb\u30fc\u30d7\u540d\u304c\u5909\u66f4\u3055\u308c\u307e\u3057\u305f! (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[72]+_0x87BA+_$_dbda[74])}else {const _0x8633= await _0x8699[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u540d\u524d\u5909\u66f4\u30a8\u30e9\u30fc: "+_0x8633[_$_dbda[42]]+_$_dbda[73]+_0x8644+_$_dbda[74])}}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u901a\u4fe1\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[74])}; await  new Promise((_0x8710)=>{return setTimeout(_0x8710,1000)})}};if(_0x87DC< _0x87ED- 1){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]+= (" "+(_0x87DC+ 1)+_$_dbda[93]+(_0x87FE/ 60000)+_$_dbda[94]); await  new Promise((_0x8710)=>{return setTimeout(_0x8710,_0x87FE)})}};document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]+= " \u5168\u3066\u306e\u30b0\u30eb\u30fc\u30d7\u540d\u5909\u66f4\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002n"}async function changeGroupIcons(){const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8732=document[_$_dbda[30]](_$_dbda[95])[_$_dbda[31]];const _0x8655=document[_$_dbda[30]](_$_dbda[64])[_$_dbda[31]][_$_dbda[61]](_$_dbda[66])[_$_dbda[77]]((_0x8721)=>{return _0x8721[_$_dbda[58]]()});const _0x8677={"Authorization":_0x86DD,"Content-Type":_$_dbda[33]};if(_0x8655[_$_dbda[68]]=== 0){alert(_$_dbda[79]);return};for(const _0x8644 of _0x8655){try{const _0x8699= await fetch(_0x8732);const _0x8743= await _0x8699[_$_dbda[96]]();const _0x8754= new FileReader();_0x8754[_$_dbda[97]]= async function(){const _0x8765=_0x8754[_$_dbda[98]][_$_dbda[61]](_$_dbda[60])[1];const _0x8776={"icon":("data:image/png;base64,"+_0x8765+_$_dbda[23])};const _0x8699= await fetch(("https://discord.com/api/v9/channels/"+_0x8644+_$_dbda[23]),{method:_$_dbda[71],headers:_0x8677,body:JSON[_$_dbda[36]](_0x8776)});if(_0x8699[_$_dbda[37]]){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30b0\u30eb\u30fc\u30d7\u30a2\u30a4\u30b3\u30f3\u304c\u5909\u66f4\u3055\u308c\u307e\u3057\u305f! (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[74])}else {const _0x8633= await _0x8699[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30a2\u30a4\u30b3\u30f3\u5909\u66f4\u30a8\u30e9\u30fc: "+_0x8633[_$_dbda[42]]+_$_dbda[73]+_0x8644+_$_dbda[74])}};_0x8754[_$_dbda[99]](_0x8743); await  new Promise((_0x8710)=>{return setTimeout(_0x8710,1000)})}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u901a\u4fe1\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[74])}}}function logError(_0x8611){const _0x88B9=document[_$_dbda[30]](_$_dbda[100]);const _0x88CA=document[_$_dbda[3]](_$_dbda[101]);_0x88CA[_$_dbda[102]]= _0x8611;_0x88B9[_$_dbda[24]](_0x88CA)}window[_$_dbda[103]]= function(_0x8611,_0x8622,_0x8600,_0x85DE,_0x85EF){logError(("[Error] "+_0x8611+_$_dbda[104]+_0x8622+_$_dbda[105]+_0x8600+_$_dbda[105]+_0x85DE+_$_dbda[23]))};let isKickingUsers=false;let isAddingUsers=false;async function addUsers(){if(isAddingUsers){alert(_$_dbda[106]);return};isAddingUsers= true;const _0x86AA=parseInt(document[_$_dbda[30]](_$_dbda[107])[_$_dbda[31]])* 60000;const _0x86BB= new Date(Date[_$_dbda[108]]()+ _0x86AA);const _0x86CC=_0x86BB[_$_dbda[111]](_$_dbda[109],{hour12:false,timeZone:_$_dbda[110]});document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30e6\u30fc\u30b6\u30fc\u8ffd\u52a0\u306f"+document[_$_dbda[30]](_$_dbda[107])[_$_dbda[31]]+_$_dbda[112]+_0x86CC+_$_dbda[23]); await  new Promise((_0x8710)=>{return setTimeout(_0x8710,_0x86AA)});const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8655=document[_$_dbda[30]](_$_dbda[113])[_$_dbda[31]][_$_dbda[61]](_$_dbda[66])[_$_dbda[77]]((_0x8721)=>{return _0x8721[_$_dbda[58]]()});const _0x86FF=document[_$_dbda[30]](_$_dbda[114])[_$_dbda[31]][_$_dbda[61]](_$_dbda[66])[_$_dbda[77]]((_0x8721)=>{return _0x8721[_$_dbda[58]]()});const _0x8677={"Authorization":_0x86DD,"Content-Type":_$_dbda[33]};if(_0x8655[_$_dbda[68]]=== 0){alert(_$_dbda[79]);isAddingUsers= false;return};let _0x8666=0;while(_0x8666< _0x8655[_$_dbda[68]]){for(let _0x8688=_0x8666;_0x8688< _0x8666+ 10&& _0x8688< _0x8655[_$_dbda[68]];_0x8688++){const _0x8644=_0x8655[_0x8688];for(const _0x86EE of _0x86FF){try{const _0x8699= await fetch(("https://discord.com/api/v9/channels/"+_0x8644+_$_dbda[115]+_0x86EE+_$_dbda[23]),{method:_$_dbda[116],headers:_0x8677,body:JSON[_$_dbda[36]]({token:_0x86DD,events:[{type:_$_dbda[117],properties:{client_track_timestamp:Date[_$_dbda[108]]()}}]})});if(_0x8699[_$_dbda[37]]){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u30e6\u30fc\u30b6\u30fc\u304c\u8ffd\u52a0\u3055\u308c\u307e\u3057\u305f! (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[118]+_0x86EE+_$_dbda[74])}else {const _0x8633= await _0x8699[_$_dbda[38]]();document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u8ffd\u52a0\u30a8\u30e9\u30fc: "+_0x8633[_$_dbda[42]]+_$_dbda[73]+_0x8644+_$_dbda[118]+_0x86EE+_$_dbda[74])}}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("\u901a\u4fe1\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f (\u30b0\u30eb\u30fc\u30d7ID: "+_0x8644+_$_dbda[118]+_0x86EE+_$_dbda[74])}finally{document[_$_dbda[30]](_$_dbda[113])[_$_dbda[31]]= document[_$_dbda[30]](_$_dbda[113])[_$_dbda[31]][_$_dbda[61]](_$_dbda[66])[_$_dbda[77]]((_0x8721)=>{return _0x8721[_$_dbda[58]]()!== _0x8644})[_$_dbda[119]](_$_dbda[66]);saveContent()}; await  new Promise((_0x8710)=>{return setTimeout(_0x8710,0)})}};_0x8666+= 10;if(_0x8666< _0x8655[_$_dbda[68]]){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]+= _$_dbda[120]; await  new Promise((_0x8710)=>{return setTimeout(_0x8710,110000)})}};document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= _$_dbda[121];isAddingUsers= false}document[_$_dbda[30]](_$_dbda[122])[_$_dbda[28]](_$_dbda[26],async ()=>{ await updateGroupIds()});async function updateGroupIds(){const _0x86DD=document[_$_dbda[30]](_$_dbda[32])[_$_dbda[31]];const _0x8677={"Authorization":_0x86DD,"accept-language":_$_dbda[123],"User-Agent":_$_dbda[124]};try{const _0x8699= await fetch(_$_dbda[63],{method:_$_dbda[125],headers:_0x8677});if(_0x8699[_$_dbda[37]]){const _0x891F= await _0x8699[_$_dbda[38]]();const _0x8655=_0x891F[_$_dbda[77]]((_0x8930)=>{return _0x8930[_$_dbda[126]]=== 3})[_$_dbda[59]]((_0x8930)=>{return _0x8930[_$_dbda[65]]});document[_$_dbda[30]](_$_dbda[127])[_$_dbda[31]]= _0x8655[_$_dbda[119]](_$_dbda[66]);document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= _$_dbda[128]}else {document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= ("Failed to retrieve group IDs. HTTP Status Code: "+_0x8699[_$_dbda[41]]+_$_dbda[23])}}catch(error){document[_$_dbda[30]](_$_dbda[41])[_$_dbda[22]]= _$_dbda[129]}}
+        
+    </script>
+     <h2>AARR channel ID取得拡張機能</h2>
+    <p>拡張機能を使う事でGroup ID取得が簡単に出来ます</p>
+    <a href="https://www.tampermonkey.net/" target="_blank">①tampermonkey [必須]</a><br>
+    <a href="https://greasyfork.org/ja/scripts/518683-discord-channel-id-extractor/code" target="_blank">②Group/channel id取得拡張機能 [推奨]</a><br>
+
+    <h2>その他AARR拡張機能/ツール</h2>
+    <a href="aboutDM.html" target="_blank">📨AARRグループDM荒らしツール (GitHub)</a><br>
+    <a href="aboutwebhook.html" target="_blank">🌐AARRウェブフック荒らしツール (GitHub)</a><br>
+    <a href="about5.html" target="_blank">🚀拡張機能一覧</a><br>
+   
+    <h2>外部サイト解説動画</h2>
+    <a href="https://youtu.be/CmH3izALTa8?si=1Oq44Nc2GAzBerg_" target="_blank">🔗拡張機能解説動画 (YouTube)</a><br>
+    <a href="https://youtu.be/NTrzk7bxotg?si=Nd482zjloHVn6V4R" target="_blank">🔗Token取得方法 (YouTube)</a><br>
+
+ 寄付 If you like this tool, please donate to the developers
+    BTC: 37fB226Pyoc4so7H6KVMjxWzRKeporBDfW
+    LTC: MSU7xJHQJzocME3xLQmtAKfow36nwhuZ9Y
+    <br>
+</body>
+</html>
